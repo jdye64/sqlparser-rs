@@ -1818,17 +1818,18 @@ impl<'a> Parser<'a> {
         let model_name = self.parse_object_name()?;
         self.expect_keyword(Keyword::WITH)?;
 
-        if self.consume_token(&Token::LParen) {
-            // let if_not_exists = self.parse_keywords(&[Keyword::IF, Keyword::NOT, Keyword::EXISTS]);
-            let table_properties = self.parse_options(Keyword::TBLPROPERTIES)?;
-            self.expect_token(&Token::RParen)?;
-        }
+        self.expect_token(&Token::LParen)?;
 
-        // let class_name = self.parse_literal_string()?;
-        // let using = self.parse_optional_create_function_using()?;
+        // What should I use here to parse key = value comma seperated pairs???
+        let empty = self.parse_literal_string()?;
+        self.consume_token(&Token::Eq);
+        let model_class = Some(self.parse_literal_string()?);
+
+        self.expect_token(&Token::RParen)?;
 
         Ok(Statement::CreateModel {
-            model_name
+            model_name,
+            model_class,
         })
     }
 

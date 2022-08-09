@@ -858,6 +858,7 @@ pub enum Statement {
     /// CREATE MODEL
     CreateModel {
         model_name: ObjectName,
+        model_class: Option<String>,
     },
     /// CREATE VIEW
     CreateView {
@@ -1479,12 +1480,20 @@ impl fmt::Display for Statement {
                 Ok(())
             }
             Statement::CreateModel {
-                model_name
+                model_name,
+                model_class,
             } => {
                 write!(
                     f,
-                    "CREATE MODEL {model_name}"
+                    "CREATE MODEL {model_name} WITH ("
                 )?;
+                if let Some(model_class) = model_class {
+                    write!(
+                        f,
+                        "model_class = '{}')",
+                        model_class
+                    )?;
+                }
                 Ok(())
             }
             Statement::CreateView {
