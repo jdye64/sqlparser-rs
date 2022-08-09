@@ -855,6 +855,10 @@ pub enum Statement {
         /// WHERE
         selection: Option<Expr>,
     },
+    /// CREATE MODEL
+    CreateModel {
+        model_name: ObjectName,
+    },
     /// CREATE VIEW
     CreateView {
         or_replace: bool,
@@ -1472,6 +1476,15 @@ impl fmt::Display for Statement {
                 if let Some(u) = using {
                     write!(f, " {}", u)?;
                 }
+                Ok(())
+            }
+            Statement::CreateModel {
+                model_name
+            } => {
+                write!(
+                    f,
+                    "CREATE MODEL {model_name}"
+                )?;
                 Ok(())
             }
             Statement::CreateView {

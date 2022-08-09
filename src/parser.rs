@@ -1720,6 +1720,8 @@ impl<'a> Parser<'a> {
             self.parse_create_database()
         } else if dialect_of!(self is HiveDialect) && self.parse_keyword(Keyword::FUNCTION) {
             self.parse_create_function(temporary)
+        } else if dialect_of!(self is DaskDialect) && self.parse_keyword(Keyword::MODEL) {
+            self.parse_create_model()
         } else {
             self.expected("an object type after CREATE", self.peek_token())
         }
@@ -1809,6 +1811,24 @@ impl<'a> Parser<'a> {
             name,
             class_name,
             using,
+        })
+    }
+
+    pub fn parse_create_model(&mut self) -> Result<Statement, ParserError> {
+        let model_name = self.parse_object_name()?;
+        self.expect_keyword(Keyword::WITH)?;
+
+        if self.consume_token(&Token::LParen) {
+            // let if_not_exists = self.parse_keywords(&[Keyword::IF, Keyword::NOT, Keyword::EXISTS]);
+            let table_properties = self.parse_options(Keyword::TBLPROPERTIES)?;
+            self.expect_token(&Token::RParen)?;
+        }
+
+        // let class_name = self.parse_literal_string()?;
+        // let using = self.parse_optional_create_function_using()?;
+
+        Ok(Statement::CreateModel {
+            model_name
         })
     }
 

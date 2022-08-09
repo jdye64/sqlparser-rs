@@ -325,6 +325,7 @@ define_keywords!(
     MIN,
     MINUTE,
     MOD,
+    MODEL,
     MODIFIES,
     MODULE,
     MONTH,

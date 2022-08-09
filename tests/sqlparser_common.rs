@@ -4991,6 +4991,7 @@ fn test_placeholder() {
     let dialects = TestedDialects {
         dialects: vec![
             Box::new(GenericDialect {}),
+            Box::new(DaskDialect {}),
             Box::new(PostgreSqlDialect {}),
             Box::new(MsSqlDialect {}),
             Box::new(AnsiDialect {}),
