@@ -1827,8 +1827,6 @@ impl<'a> Parser<'a> {
 
         self.expect_token(&Token::RParen)?;
 
-        panic!("here");
-
         Ok(Statement::CreateModel {
             model_name,
             model_class,
