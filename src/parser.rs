@@ -1823,7 +1823,7 @@ impl<'a> Parser<'a> {
         // What should I use here to parse key = value comma seperated pairs???
         let empty = self.parse_literal_string()?;
         self.consume_token(&Token::Eq);
-        let model_class = Some(self.parse_literal_string()?);
+        let model_class = Some(self.parse_literal_string()?); 
 
         self.expect_token(&Token::RParen)?;
 
