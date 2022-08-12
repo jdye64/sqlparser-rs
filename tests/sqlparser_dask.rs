@@ -29,10 +29,12 @@ fn test_create_model_with() {
     //     target_column = 'target'
     // )"; 
     let sql = "CREATE MODEL my_model WITH (
-        model_class = 'sklearn.ensemble.GradientBoostingClassifier'
+        model_class = 'sklearn.ensemble.GradientBoostingClassifier',
+        wrap_predict = True,
+        target_column = 'target'
     )";
     match dask().verified_stmt(sql) {
-        Statement::CreateModel { model_name, model_class } => {
+        Statement::CreateModel { model_name, } => {
             assert_eq!(model_name.to_string(), "my_model")
         },
         _ => panic!("fail")

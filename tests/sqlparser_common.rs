@@ -24,7 +24,7 @@ mod test_utils;
 use matches::assert_matches;
 use sqlparser::ast::*;
 use sqlparser::dialect::{
-    AnsiDialect, BigQueryDialect, ClickHouseDialect, GenericDialect, HiveDialect, MsSqlDialect,
+    AnsiDialect, BigQueryDialect, ClickHouseDialect, DaskDialect, GenericDialect, HiveDialect, MsSqlDialect,
     PostgreSqlDialect, SQLiteDialect, SnowflakeDialect,
 };
 use sqlparser::keywords::ALL_KEYWORDS;

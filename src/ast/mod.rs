@@ -24,6 +24,7 @@ use alloc::{
     vec::Vec,
 };
 use core::fmt;
+use std::collections::HashMap;
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -858,7 +859,7 @@ pub enum Statement {
     /// CREATE MODEL
     CreateModel {
         model_name: ObjectName,
-        model_class: Option<String>,
+        key_value_args: HashMap<String, &Box<Expr>>
     },
     /// CREATE VIEW
     CreateView {

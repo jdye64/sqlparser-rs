@@ -21,6 +21,7 @@ use alloc::{
     vec::Vec,
 };
 use core::fmt;
+use std::collections::HashMap;
 
 use log::debug;
 
@@ -1820,16 +1821,38 @@ impl<'a> Parser<'a> {
 
         self.expect_token(&Token::LParen)?;
 
-        // What should I use here to parse key = value comma seperated pairs???
-        let empty = self.parse_literal_string()?;
-        self.consume_token(&Token::Eq);
-        let model_class = Some(self.parse_literal_string()?); 
+        // Parse all KV pairs into a Vec<BinaryExpr> instances
+        let kv_binexprs = self.parse_comma_separated(Parser::parse_expr)?;
+
+        let kv_pairs: HashMap<String, &Box<Expr>> = kv_binexprs
+            .iter()
+            .map(|f| match f {
+                Expr::BinaryOp { left, op, right } => {
+                    (match *left.clone() {
+                        Expr::Value(value) => match value {
+                            Value::EscapedStringLiteral(key_val)
+                            | Value::SingleQuotedString(key_val)
+                            | Value::DoubleQuotedString(key_val) => key_val.clone(),
+                            _ => "".to_string()
+                        },
+                        _ => "".to_string()
+                    }, right)
+                },
+                _ => panic!("something")
+            })
+            .collect();
 
         self.expect_token(&Token::RParen)?;
 
+        // Each CREATE MODEL statement is expected to have an AS clause declaring the SQL query used
+        // to generate the training dataset
+        self.expect_keyword(Keyword::AS);
+
+        // Extract the 
+
         Ok(Statement::CreateModel {
             model_name,
-            model_class,
+            key_value_args: kv_pairs,
         })
     }
 
